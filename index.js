@@ -1,9 +1,11 @@
 const express = require("express");
 const axios = require("axios");
 const cheerio = require("cheerio");
+const compression = require("compression");
 
 const app = express();
 const port = 3000;
+app.use(compression());
 
 // API endpoint for getting a list of manga titles and links
 app.get("/manga/titles", async (req, res) => {
@@ -11,27 +13,39 @@ app.get("/manga/titles", async (req, res) => {
   const max_page = 63; // تحديد عدد الصفحات
 
   let manga_titles = [];
+  let promises = [];
 
   try {
     for (let page = 1; page <= max_page; page++) {
       const url = base_url + page + "/";
-      const response = await axios.get(url);
+      promises.push(axios.get(url));
+    }
 
+    const responses = await Promise.all(promises);
+
+    responses.forEach((response) => {
       const $ = cheerio.load(response.data);
       const items = $(".col-6.col-md-2.badge-pos-1");
 
       items.each((index, element) => {
         const manga_title = $(element).find("h3.h5").text().trim();
-        const manga_link = $(element).find("a").attr("href");
-        manga_titles.push({ title: manga_title, link: manga_link });
+        const manga_title_link = $(element)
+          .find("a")
+          .attr("href")
+          .substring(28);
+
+        manga_titles.push({
+          title: manga_title,
+          dir_link: manga_title_link,
+        });
       });
-    }
+    });
+
     res.json(manga_titles);
   } catch (error) {
     res.status(500).json({ error: `An error occurred: ${error}` });
   }
 });
-
 // API endpoint for getting details of a specific manga
 app.get("/manga/details/:manga_link", async (req, res) => {
   const manga_link = req.params.manga_link;
@@ -42,9 +56,15 @@ app.get("/manga/details/:manga_link", async (req, res) => {
     );
     const $ = cheerio.load(response.data);
     const other_info_section = $(".post-content .post-content_item");
+    const other_info_section2 = $(".post-status .post-content_item");
 
     let other_info = {};
     other_info_section.each((index, element) => {
+      const heading = $(element).find("h5").text().trim();
+      const content = $(element).find(".summary-content").text().trim();
+      other_info[heading] = content;
+    });
+    other_info_section2.each((index, element) => {
       const heading = $(element).find("h5").text().trim();
       const content = $(element).find(".summary-content").text().trim();
       other_info[heading] = content;
