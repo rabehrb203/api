@@ -10,7 +10,7 @@ const port = 3000;
 // API endpoint for getting a list of manga titles and links
 app.get("/manga/titles", async (req, res) => {
   const base_url = "https://mangarose.net/manga/page/";
-  const max_page = 63; // تحديد عدد الصفحات
+  const max_page = 1; // تحديد عدد الصفحات
 
   let manga_titles = [];
   let promises = [];
