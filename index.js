@@ -1,11 +1,11 @@
 const express = require("express");
 const axios = require("axios");
 const cheerio = require("cheerio");
-const compression = require("compression");
+//const compression = require("compression");
 
 const app = express();
 const port = 3000;
-app.use(compression());
+//app.use(compression());
 
 // API endpoint for getting a list of manga titles and links
 app.get("/manga/titles", async (req, res) => {
