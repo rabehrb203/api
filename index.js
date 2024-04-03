@@ -62,12 +62,25 @@ app.get("/manga/details/:manga_link", async (req, res) => {
 
     let other_info = {};
     other_info_section.each((index, element) => {
-      const heading = $(element).find("h5").text().trim();
+          const heading = $(element)
+        .find("h5")
+        .text()
+        .trim()
+        .replace("تقييم", "rating")
+        .replace("التصنيفات", "categories")
+        .replace("المرتبة", "rank")
+        .replace("النوع", "type")
+        .replace("أسماء أخرى", "otherNames");
       const content = $(element).find(".summary-content").text().trim();
       other_info[heading] = content;
     });
     other_info_section2.each((index, element) => {
-      const heading = $(element).find("h5").text().trim();
+          const heading = $(element)
+        .find("h5")
+        .text()
+        .trim()
+        .replace("الإصدار", "release")
+        .replace("الحالة", "status");
       const content = $(element).find(".summary-content").text().trim();
       other_info[heading] = content;
     });
