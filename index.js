@@ -29,6 +29,7 @@ app.get("/manga/titles", async (req, res) => {
 
       items.each((index, element) => {
         const manga_title = $(element).find("h3.h5").text().trim();
+        const manga_cover = $(element).find("img").attr("src");
         const manga_title_link = $(element)
           .find("a")
           .attr("href")
@@ -36,6 +37,7 @@ app.get("/manga/titles", async (req, res) => {
 
         manga_titles.push({
           title: manga_title,
+          cover: manga_cover,
           dir_link: manga_title_link,
         });
       });
