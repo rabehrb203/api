@@ -4,18 +4,30 @@ const cheerio = require("cheerio");
 
 const app = express();
 const port = 3000;
+const userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3";
 
 // API endpoint for getting a list of manga titles and links
 app.get("/manga/titles", async (req, res) => {
   const base_url = "https://lekmanga.net/manga/page/";
-  const max_page = 2;
+  const max_page = 2; // تحديد عدد الصفحات
+  let manga_titles = [];
+  let promises = [];
 
   try {
-    let manga_titles = [];
-
     for (let page = 1; page <= max_page; page++) {
-      const url = `${base_url}${page}/`;
-      const response = await axios.get(url);
+      const url = base_url + page + "/";
+      // تضمين رأس "User-Agent" في خيارات الطلب
+      const options = {
+        headers: {
+          "User-Agent": userAgent
+        }
+      };
+      promises.push(axios.get(url, options));
+    }
+
+    const responses = await Promise.all(promises);
+
+    responses.forEach((response) => {
       const $ = cheerio.load(response.data);
       const items = $(".col-12.col-md-6.badge-pos-1");
 
@@ -37,11 +49,11 @@ app.get("/manga/titles", async (req, res) => {
           dir_link: manga_title_link,
         });
       });
-    }
+    });
 
     res.json(manga_titles);
   } catch (error) {
-    res.status(500).json({ error: `An error occurred: ${error.message}` });
+    res.status(500).json({ error: `An error occurred: ${error}` });
   }
 });
 
