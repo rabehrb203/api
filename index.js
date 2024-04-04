@@ -8,20 +8,14 @@ const port = 3000;
 // API endpoint for getting a list of manga titles and links
 app.get("/manga/titles", async (req, res) => {
   const base_url = "https://lekmanga.net/manga/page/";
-  const max_page = 2; // تحديد عدد الصفحات
-
-  let manga_titles = [];
-  let promises = [];
+  const max_page = 2;
 
   try {
+    let manga_titles = [];
+
     for (let page = 1; page <= max_page; page++) {
-      const url = base_url + page + "/";
-      promises.push(axios.get(url));
-    }
-
-    const responses = await Promise.all(promises);
-
-    responses.forEach((response) => {
+      const url = `${base_url}${page}/`;
+      const response = await axios.get(url);
       const $ = cheerio.load(response.data);
       const items = $(".col-12.col-md-6.badge-pos-1");
 
@@ -43,28 +37,30 @@ app.get("/manga/titles", async (req, res) => {
           dir_link: manga_title_link,
         });
       });
-    });
+    }
 
     res.json(manga_titles);
   } catch (error) {
-    res.status(500).json({ error: `An error occurred: ${error}` });
+    res.status(500).json({ error: `An error occurred: ${error.message}` });
   }
 });
+
 // API endpoint for getting details of a specific manga
 app.get("/manga/details/:manga_link", async (req, res) => {
   const manga_link = req.params.manga_link;
 
   try {
     const response = await axios.get(
-      "https://lekmanga.net/manga/" + manga_link
+      `https://lekmanga.net/manga/${manga_link}`
     );
     const $ = cheerio.load(response.data);
-    const other_info_section = $(".post-content .post-content_item");
-    const other_info_section2 = $(".post-status .post-content_item");
+    const other_info_sections = $(
+      ".post-content_item, .post-status .post-content_item"
+    );
 
     let other_info = {};
 
-    other_info_section.each((index, element) => {
+    other_info_sections.each((index, element) => {
       const heading = $(element)
         .find("h5")
         .text()
@@ -75,26 +71,16 @@ app.get("/manga/details/:manga_link", async (req, res) => {
         .replace("التصنيف", "categories")
         .replace("المرتبة", "rank")
         .replace("النوع", "type")
-        .replace("اسماء اخرى", "otherNames");
-      const content = $(element).find(".summary-content").text().trim();
-      other_info[heading] = content;
-    });
-    other_info_section2.each((index, element) => {
-      const heading = $(element)
-        .find("h5")
-        .text()
-        .trim()
+        .replace("اسماء اخرى", "otherNames")
         .replace("سنة الانتاج", "release")
         .replace("الحالة", "status");
       const content = $(element).find(".summary-content").text().trim();
       other_info[heading] = content;
     });
 
-    // Convert the set back to an object
-
     res.json(other_info);
   } catch (error) {
-    res.status(500).json({ error: `An error occurred: ${error}` });
+    res.status(500).json({ error: `An error occurred: ${error.message}` });
   }
 });
 
@@ -104,7 +90,7 @@ app.get("/manga/chapters/:manga_link", async (req, res) => {
 
   try {
     const response = await axios.get(
-      "https://lekmanga.net/manga/" + manga_link
+      `https://lekmanga.net/manga/${manga_link}`
     );
     const $ = cheerio.load(response.data);
     const chapters = $(".page-content-listing .wp-manga-chapter");
@@ -123,9 +109,10 @@ app.get("/manga/chapters/:manga_link", async (req, res) => {
 
     res.json(manga_chapters);
   } catch (error) {
-    res.status(500).json({ error: `An error occurred: ${error}` });
+    res.status(500).json({ error: `An error occurred: ${error.message}` });
   }
 });
+
 // API endpoint for getting images of a specific chapter
 app.get("/manga/images/:manga_title/:chapter_number", async (req, res) => {
   const manga_title = req.params.manga_title;
@@ -145,7 +132,7 @@ app.get("/manga/images/:manga_title/:chapter_number", async (req, res) => {
 
     res.json(chapter_images);
   } catch (error) {
-    res.status(500).json({ error: `An error occurred: ${error}` });
+    res.status(500).json({ error: `An error occurred: ${error.message}` });
   }
 });
 
