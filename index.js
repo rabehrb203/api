@@ -6,6 +6,7 @@ const cheerio = require("cheerio");
 const app = express();
 const port = 3000;
 // app.use(compression());
+const clientIP = process.env.MY_IP || '127.0.0.1';
 
 // API endpoint for getting a list of manga titles and links
 app.get("/manga/titles", async (req, res) => {
@@ -129,7 +130,7 @@ app.get("/manga/images/:manga_title/:chapter_number", async (req, res) => {
   const chapter_number = req.params.chapter_number;
 
   try {
-    const clientIP = req.ip; // الحصول على عنوان IP الخاص بالعميل
+const clientIP = process.env.MY_IP || '127.0.0.1';
 
     const chapter_link = `https://lekmanga.net/manga/${manga_title}/${chapter_number}/`;
     const response = await axios.get(chapter_link, {
