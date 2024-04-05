@@ -6,7 +6,7 @@ const cheerio = require("cheerio");
 const app = express();
 const port = 3000;
 // app.use(compression());
-const clientIP = process.env.MY_IP || '127.0.0.1';
+const userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36';
 
 // API endpoint for getting a list of manga titles and links
 app.get("/manga/titles", async (req, res) => {
@@ -130,13 +130,12 @@ app.get("/manga/images/:manga_title/:chapter_number", async (req, res) => {
   const chapter_number = req.params.chapter_number;
 
   try {
-const clientIP = process.env.MY_IP || '127.0.0.1';
 
-    const chapter_link = `https://lekmanga.net/manga/${manga_title}/${chapter_number}/`;
+   const chapter_link = `https://lekmanga.net/manga/${manga_title}/${chapter_number}/`;
     const response = await axios.get(chapter_link, {
-      headers: { "X-Forwarded-For": clientIP },
-    }); // إضافة عنوان IP العميل إلى الطلب
-    const $ = cheerio.load(response.data);
+      headers: { 'User-Agent': userAgent }
+    }); // إضافة قيمة User-Agent إلى الطلب
+
     const images = $(".reading-content .wp-manga-chapter-img");
 
     let chapter_images = [];
