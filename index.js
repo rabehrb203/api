@@ -1,14 +1,16 @@
 const express = require("express");
 const axios = require("axios");
 const cheerio = require("cheerio");
+// const compression = require("compression");
 
 const app = express();
 const port = 3000;
+// app.use(compression());
 
 // API endpoint for getting a list of manga titles and links
 app.get("/manga/titles", async (req, res) => {
-  const base_url = "https://like-manga.net/manga/page/";
-  const max_page = 63; // تحديد عدد الصفحات
+  const base_url = "https://mangarose.net/manga/page/";
+  const max_page = 1; // تحديد عدد الصفحات
 
   let manga_titles = [];
   let promises = [];
@@ -53,7 +55,7 @@ app.get("/manga/details/:manga_link", async (req, res) => {
 
   try {
     const response = await axios.get(
-      "https://like-manga.net/manga/" + manga_link
+      "https://mangarose.net/manga/" + manga_link
     );
     const $ = cheerio.load(response.data);
     const other_info_section = $(".post-content .post-content_item");
@@ -99,7 +101,7 @@ app.get("/manga/chapters/:manga_link", async (req, res) => {
 
   try {
     const response = await axios.get(
-      "https://like-manga.net/manga/" + manga_link
+      "https://mangarose.net/manga/" + manga_link
     );
     const $ = cheerio.load(response.data);
     const chapters = $(".page-content-listing .wp-manga-chapter");
@@ -127,7 +129,7 @@ app.get("/manga/images/:manga_title/:chapter_number", async (req, res) => {
   const chapter_number = req.params.chapter_number;
 
   try {
-    const chapter_link = `https://like-manga.net/manga/${manga_title}/${chapter_number}/`;
+    const chapter_link = `https://lekmanga.net/manga/${manga_title}/${chapter_number}/`;
     const response = await axios.get(chapter_link);
     const $ = cheerio.load(response.data);
     const images = $(".reading-content .wp-manga-chapter-img");
