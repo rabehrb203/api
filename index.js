@@ -129,8 +129,12 @@ app.get("/manga/images/:manga_title/:chapter_number", async (req, res) => {
   const chapter_number = req.params.chapter_number;
 
   try {
+    const clientIP = req.ip; // الحصول على عنوان IP الخاص بالعميل
+
     const chapter_link = `https://lekmanga.net/manga/${manga_title}/${chapter_number}/`;
-    const response = await axios.get(chapter_link);
+    const response = await axios.get(chapter_link, {
+      headers: { "X-Forwarded-For": clientIP },
+    }); // إضافة عنوان IP العميل إلى الطلب
     const $ = cheerio.load(response.data);
     const images = $(".reading-content .wp-manga-chapter-img");
 
