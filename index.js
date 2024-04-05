@@ -149,7 +149,10 @@ app.get("/manga/images/:manga_title/:chapter_number", async (req, res) => {
     res.status(500).json({ error: `An error occurred: ${error}` });
   }
 });
-
+app.get("/myip", (req, res) => {
+  const clientIP = req.ip;
+  res.send(`Your IP address is: ${clientIP}`);
+});
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
