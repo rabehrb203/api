@@ -9,18 +9,19 @@ const port = 3000;
 const userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36';
 
 // API endpoint for getting a list of manga titles and links
-app.get("/manga/titles", async (req, res) => {
-  const base_url = "https://mangarose.net/manga/page/";
+app.get("/manga/titles/:page_num", async (req, res) => {
+  const base_url = "https://mangarose.net/manga/page/${page_num}";
   const max_page = 1; // تحديد عدد الصفحات
 
   let manga_titles = [];
   let promises = [];
 
   try {
-    for (let page = 1; page <= max_page; page++) {
-      const url = base_url + page + "/";
-      promises.push(axios.get(url));
-    }
+    // for (let page = 1; page <= max_page; page++) {
+      // const url = base_url + page + "/";
+      // promises.push(axios.get(url));
+    // }
+      promises.push(axios.get(base_url));
 
     const responses = await Promise.all(promises);
 
