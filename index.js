@@ -36,7 +36,7 @@ app.get("/manga/titles/:page_num", async (req, res) => {
         const manga_title_link = $(element)
           .find("a")
           .attr("href")
-          .substring(28);
+          .substring(31);
 
         manga_titles.push({
           title: manga_title,
