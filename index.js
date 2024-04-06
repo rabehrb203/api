@@ -126,13 +126,13 @@ app.get("/manga/chapters/:manga_link", async (req, res) => {
   }
 });
 // API endpoint for getting images of a specific chapter
-app.get("/manga/images/:manga_title/:chapter_number", async (req, res) => {
+app.get("/manga/images/:chapter_link/:chapter_number", async (req, res) => {
   const manga_title = req.params.manga_title;
   const chapter_number = req.params.chapter_number;
 
   try {
 
-   const chapter_link = `https://lekmanga.net/manga/${manga_title}/${chapter_number}/`;
+   const chapter_link = `https://thunderscans.com/${chapter_link}/`;
    const headers = {
 
   'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36'
@@ -142,7 +142,7 @@ const response = await axios.get(chapter_link, {
   headers: headers
 });
 
-    const images = $(".reading-content .wp-manga-chapter-img");
+    const images = $("#readerarea .ts-main-image.curdown");
 
     let chapter_images = [];
     images.each((index, element) => {
