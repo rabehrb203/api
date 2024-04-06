@@ -127,8 +127,7 @@ app.get("/manga/chapters/:manga_link", async (req, res) => {
 });
 // API endpoint for getting images of a specific chapter
 app.get("/manga/images/:dir_link", async (req, res) => {
-  const manga_title = req.params.manga_title;
-  const chapter_number = req.params.chapter_number;
+  const dir_link = req.params.dir_link; // Retrieve dir_link from request parameters
 
   try {
 
