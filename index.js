@@ -30,7 +30,7 @@ app.get("/manga/titles/:page_num", async (req, res) => {
       const items = $(".bs");
 
       items.each((index, element) => {
-        const manga_title = $(element).find("a").text().trim();
+        const manga_title = $(element).find("div.tt").text().trim();
         const manga_cover = $(element).find("img").attr("src");
 
         const manga_title_link = $(element)
