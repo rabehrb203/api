@@ -10,7 +10,7 @@ const userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 
 
 // API endpoint for getting a list of manga titles and links
 app.get("/manga/titles/:page_num", async (req, res) => {
-  const base_url = "https://mangarose.net/manga/page/${page_num}";
+  const base_url = "https://3asq.org/manga/page${page_num}";
   const max_page = 1; // تحديد عدد الصفحات
 
   let manga_titles = [];
