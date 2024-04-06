@@ -10,7 +10,7 @@ const userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 
 
 // API endpoint for getting a list of manga titles and links
 app.get("/manga/titles/:page_num", async (req, res) => {
-  const base_url = "https://3asq.org/manga/page/${page_num}";
+  const base_url = "https://thunderscans.com/manga/?page=${page_num}";
   const max_page = 1; // تحديد عدد الصفحات
 
   let manga_titles = [];
@@ -27,10 +27,10 @@ app.get("/manga/titles/:page_num", async (req, res) => {
 
     responses.forEach((response) => {
       const $ = cheerio.load(response.data);
-      const items = $(".col-6.col-md-2.badge-pos-1");
+      const items = $(".bs");
 
       items.each((index, element) => {
-        const manga_title = $(element).find("h3.h5").text().trim();
+        const manga_title = $(element).find("a").text().trim();
         const manga_cover = $(element).find("img").attr("src");
 
         const manga_title_link = $(element)
