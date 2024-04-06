@@ -134,7 +134,7 @@ app.get("/manga/images/:dir_link", async (req, res) => {
    const chapter_link = `https://thunderscans.com/${dir_link}/`;
    const headers = {
 
-  'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36'
+  'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36'
 };
 
 const response = await axios.get(chapter_link, {
