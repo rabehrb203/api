@@ -103,16 +103,16 @@ app.get("/manga/chapters/:manga_link", async (req, res) => {
 
   try {
     const response = await axios.get(
-      "https://mangarose.net/manga/" + manga_link
+      "https://thunderscans.com/manga/" + manga_link
     );
     const $ = cheerio.load(response.data);
-    const chapters = $(".page-content-listing .wp-manga-chapter");
+    const chapters = $(".eplister #aa");
 
     let manga_chapters = [];
     chapters.each((index, element) => {
-      const chapter_number = $(element).find("a").text().trim();
-      const chapter_link = $(element).find("a").attr("href");
-      const chapter_date = $(element).find("span").text().trim();
+      const chapter_number = $(element).find("span.chapternum").text().trim();
+      const chapter_link = $(element).find("a.aa").attr("href");
+      const chapter_date = $(element).find("span.chapterdate").text().trim();
       manga_chapters.push({
         number: chapter_number,
         link: chapter_link,
